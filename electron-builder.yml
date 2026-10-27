@@ -1,0 +1,30 @@
+# Configuración de empaquetado (npm run package).
+# El icono se toma de build/icon.png (1024×1024) y se convierte solo a .icns / .ico.
+appId: com.amelia.chiikawapet
+productName: Chiikawa Pet
+directories:
+  output: release
+  buildResources: build
+# Solo hace falta lo compilado: Vite ya metió Three.js y el modelo dentro de out/
+files:
+  - out/**/*
+  - package.json
+
+mac:
+  target:
+    - target: dmg
+      arch: arm64 # Apple Silicon; para Intel usa x64 o "universal" (ambos, pesa el doble)
+  category: public.app-category.entertainment
+  extendInfo:
+    # App de "barra de menús": nunca aparece en el Dock (ni siquiera un instante al abrirla)
+    LSUIElement: true
+
+win:
+  target: nsis
+
+nsis:
+  oneClick: true # instala sin preguntas en la carpeta del usuario (no pide administrador)
+
+linux:
+  target: AppImage
+  category: Game

@@ -1,7 +1,9 @@
 {
   "name": "chiikawa-pet",
+  "productName": "Chiikawa Pet",
   "version": "0.1.0",
   "description": "Desktop pet 3D de Chiikawa",
+  "author": "Amelia",
   "main": "./out/main/index.js",
   "private": true,
   "scripts": {
@@ -11,15 +13,13 @@
     "package": "npm run build && electron-builder",
     "test": "node --test src/renderer/*.test.ts"
   },
-  "dependencies": {
-    "three": "^0.186.1"
-  },
   "devDependencies": {
     "@types/node": "^26.6.5",
     "@types/three": "^0.186.0",
     "electron": "^45.0.0",
     "electron-builder": "^26.18.0",
     "electron-vite": "^6.0.0",
+    "three": "^0.186.1",
     "typescript": "^7.0.2",
     "vite": "^8.3.5"
   }

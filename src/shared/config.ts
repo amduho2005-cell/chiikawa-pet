@@ -1,5 +1,5 @@
 // Constantes ajustables de la app. Las usan tanto el proceso main como el renderer.
-// Iremos agregando aquí tiempos, BONE_MAP y parámetros de animación en los siguientes pasos.
+// Con `npm run dev` corriendo, los cambios aquí se ven al instante.
 
 /** Tamaño de la ventana en píxeles (cuadrada). */
 export const WINDOW_SIZE = 250
@@ -117,4 +117,4 @@ export const BEHAVIOR = {
 }
 
 /** Modo debug: dibuja el esqueleto y abre DevTools (en `npm run dev`) para ver la consola. */
-export const DEBUG = true
+export const DEBUG = false
