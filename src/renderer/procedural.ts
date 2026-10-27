@@ -18,6 +18,8 @@ export interface Pose {
   /** Inclinación de todo el cuerpo, pivotando en los pies (radianes). */
   tiltX: number
   tiltZ: number
+  /** Giro de todo el cuerpo sobre el eje vertical: 0 = mira a la cámara, + = mira a la derecha. */
+  turn: number
   /** Desplazamientos de cada hueso respecto a su pose de reposo. */
   bones: Partial<Record<Part, Angles>>
 }
@@ -26,7 +28,7 @@ export interface Pose {
 export type PoseFn = (t: number) => Pose
 
 const NO_ROTATION: Angles = [0, 0, 0]
-const restPose = (): Pose => ({ lift: 0, squash: 0, tiltX: 0, tiltZ: 0, bones: {} })
+const restPose = (): Pose => ({ lift: 0, squash: 0, tiltX: 0, tiltZ: 0, turn: 0, bones: {} })
 
 function lerpPose(a: Pose, b: Pose, w: number): Pose {
   const bones: Pose['bones'] = {}
@@ -41,6 +43,7 @@ function lerpPose(a: Pose, b: Pose, w: number): Pose {
     squash: lerp(a.squash, b.squash, w),
     tiltX: lerp(a.tiltX, b.tiltX, w),
     tiltZ: lerp(a.tiltZ, b.tiltZ, w),
+    turn: lerp(a.turn, b.turn, w),
     bones
   }
 }
@@ -58,11 +61,42 @@ export const idle: PoseFn = (t) => {
     squash: breath * c.breathAmount,
     tiltX: 0,
     tiltZ: sway * c.bodySway,
+    turn: 0,
     bones: {
       head: [breath * c.headNod, 0, head * c.headSway],
       // Al inhalar los bracitos se abren un poquito (z+ sube el brazo izquierdo, z- el derecho)
       armL: [0, 0, breath * c.armBreath],
       armR: [0, 0, -breath * c.armBreath]
+    }
+  }
+}
+
+/**
+ * Caminar hacia la derecha (dir = 1) o la izquierda (dir = -1): saltitos, tambaleo,
+ * piernas y brazos alternados, y el cuerpo girado hacia donde va.
+ */
+export function makeWalk(dir: 1 | -1): PoseFn {
+  return (t) => {
+    const c = ANIM.walk
+    // hop es 0 al tocar el suelo y 1 en lo alto del saltito (un saltito por paso)
+    const hop = Math.abs(Math.sin(Math.PI * t * c.stepsPerSecond))
+    // swing cambia de signo en cada paso: sirve para alternar piernas, brazos y tambaleo
+    const swing = Math.sin(Math.PI * t * c.stepsPerSecond)
+    return {
+      lift: hop * c.hopHeight,
+      // Estirado en el aire, aplastado al tocar el suelo
+      squash: (hop * 2 - 1) * c.squash,
+      tiltX: 0,
+      tiltZ: swing * c.waddle,
+      turn: dir * c.facing,
+      bones: {
+        legL: [swing * c.legSwing, 0, 0],
+        legR: [-swing * c.legSwing, 0, 0],
+        // Brazos al revés que las piernas, como al caminar de verdad
+        armL: [-swing * c.armSwing, 0, 0],
+        armR: [swing * c.armSwing, 0, 0],
+        head: [0, 0, -swing * c.waddle * 0.5] // la cabeza compensa un poco el tambaleo
+      }
     }
   }
 }
@@ -112,6 +146,7 @@ export class Animator {
     this.pet.position.y = FLOOR_Y + p.lift
     this.pet.rotation.x = p.tiltX
     this.pet.rotation.z = p.tiltZ
+    this.pet.rotation.y = p.turn
 
     // Capa B: huesos. local = padre⁻¹ · desplazamiento · padre · reposo
     // (pasa el desplazamiento de ejes del personaje a ejes del hueso y lo aplica sobre el reposo)

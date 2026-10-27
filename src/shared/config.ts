@@ -53,7 +53,24 @@ export const ANIM = {
     headSway: 0.07, // inclinación lateral de la cabeza
     headNod: 0.03, // asiente un poquito al respirar
     armBreath: 0.08 // los brazos se abren al inhalar
+  },
+  walk: {
+    stepsPerSecond: 3, // pasos (= saltitos) por segundo
+    hopHeight: 0.025, // altura de cada saltito
+    squash: 0.04, // estirado en el aire / aplastado al tocar el suelo
+    waddle: 0.08, // tambaleo lateral
+    legSwing: 0.35, // cuánto se adelanta cada pierna
+    armSwing: 0.3, // vaivén de los brazos
+    facing: 0.6 // giro hacia la dirección de avance (0 = de frente, 1.57 = de perfil)
   }
+}
+
+/** Comportamiento (máquina de estados). Rangos [mín, máx] en segundos. */
+export const BEHAVIOR = {
+  idleTime: [4, 10] as const, // cuánto se queda quieta antes de decidir qué hacer
+  walkTime: [3, 8] as const, // cuánto camina antes de volver a IDLE
+  walkChance: 0.6, // probabilidad de caminar al terminar IDLE (si no, se queda quieta)
+  walkSpeed: 60 // píxeles por segundo
 }
 
 /** Modo debug: dibuja el esqueleto y abre DevTools (en `npm run dev`) para ver la consola. */
