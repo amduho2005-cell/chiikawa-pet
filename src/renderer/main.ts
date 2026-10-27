@@ -1,9 +1,11 @@
 import { createScene } from './scene'
 import { loadModel } from './model'
 import { inspectRig, addSkeletonHelper } from './rig'
+import { setupClickThrough } from './input'
 import { DEBUG } from '../shared/config'
 
 const { renderer, scene, camera } = createScene()
+const checkHover = setupClickThrough(renderer)
 
 loadModel()
   .then(({ pet, animations }) => {
@@ -14,4 +16,7 @@ loadModel()
   .catch((err) => console.error('No se pudo cargar el modelo:', err))
 
 // Bucle de render (~60 fps); aquí irán las animaciones en los siguientes pasos
-renderer.setAnimationLoop(() => renderer.render(scene, camera))
+renderer.setAnimationLoop(() => {
+  renderer.render(scene, camera)
+  checkHover() // debe ir justo después de render: el píxel solo es legible en este mismo frame
+})

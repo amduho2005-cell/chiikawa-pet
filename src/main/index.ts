@@ -1,6 +1,7 @@
 import { app, BrowserWindow, screen } from 'electron'
 import { join } from 'node:path'
 import { WINDOW_SIZE, START_MARGIN, DEBUG } from '../shared/config'
+import { registerIpc } from './ipc'
 
 function createWindow(): BrowserWindow {
   // Arranca en la esquina inferior derecha del área de trabajo (sin dock ni barra de menús)
@@ -17,8 +18,15 @@ function createWindow(): BrowserWindow {
     resizable: false,
     skipTaskbar: true, // Windows/Linux: no aparece en la barra de tareas
     alwaysOnTop: true,
-    show: false // se muestra cuando el contenido está listo, para evitar un parpadeo blanco
+    show: false, // se muestra cuando el contenido está listo, para evitar un parpadeo blanco
+    webPreferences: {
+      // contextIsolation y sandbox vienen activados y nodeIntegration desactivado por defecto
+      preload: join(__dirname, '../preload/index.js')
+    }
   })
+
+  // Empieza dejando pasar los clics; el renderer lo desactiva cuando el cursor está sobre el modelo
+  win.setIgnoreMouseEvents(true, { forward: true })
 
   // 'screen-saver' es el nivel más alto en macOS: queda encima incluso de apps en pantalla completa
   win.setAlwaysOnTop(true, 'screen-saver')
@@ -39,6 +47,7 @@ function createWindow(): BrowserWindow {
 app.whenReady().then(() => {
   // macOS no usa skipTaskbar: el equivalente es ocultar el icono del Dock
   app.dock?.hide()
+  registerIpc()
   createWindow()
 })
 
