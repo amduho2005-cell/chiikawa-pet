@@ -17,5 +17,5 @@ export const CAMERA_HALF_SIZE = 0.65
 /** Altura (en unidades de escena) donde quedan los pies del modelo; negativo = abajo del centro. */
 export const FLOOR_Y = -0.55
 
-/** Muestra ayudas visuales (esqueleto, etc.). */
-export const DEBUG = false
+/** Modo debug: dibuja el esqueleto y abre DevTools (en `npm run dev`) para ver la consola. */
+export const DEBUG = true

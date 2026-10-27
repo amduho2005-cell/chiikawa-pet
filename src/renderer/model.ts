@@ -8,8 +8,9 @@ import { FLOOR_Y } from '../shared/config'
  * - tamaño máximo (ancho o alto) = 1 unidad,
  * - centrado en X/Z,
  * - con el origen del grupo en los pies, para que el squash & stretch se apoye en el suelo.
+ * También devuelve las animaciones que traiga el archivo (puede ser una lista vacía).
  */
-export async function loadModel(): Promise<THREE.Group> {
+export async function loadModel(): Promise<{ pet: THREE.Group; animations: THREE.AnimationClip[] }> {
   const gltf = await new GLTFLoader().loadAsync(modelUrl)
   const model = gltf.scene
 
@@ -28,5 +29,5 @@ export async function loadModel(): Promise<THREE.Group> {
   pet.name = 'pet'
   pet.add(model)
   pet.position.y = FLOOR_Y
-  return pet
+  return { pet, animations: gltf.animations }
 }

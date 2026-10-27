@@ -1,6 +1,6 @@
 import { app, BrowserWindow, screen } from 'electron'
 import { join } from 'node:path'
-import { WINDOW_SIZE, START_MARGIN } from '../shared/config'
+import { WINDOW_SIZE, START_MARGIN, DEBUG } from '../shared/config'
 
 function createWindow(): BrowserWindow {
   // Arranca en la esquina inferior derecha del área de trabajo (sin dock ni barra de menús)
@@ -27,6 +27,8 @@ function createWindow(): BrowserWindow {
   // En desarrollo electron-vite sirve el renderer por HTTP; en producción se carga el archivo compilado
   if (process.env.ELECTRON_RENDERER_URL) {
     win.loadURL(process.env.ELECTRON_RENDERER_URL)
+    // La ventana es diminuta y sin marco: DevTools se abre aparte para leer la consola
+    if (DEBUG) win.webContents.openDevTools({ mode: 'detach' })
   } else {
     win.loadFile(join(__dirname, '../renderer/index.html'))
   }
