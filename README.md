@@ -152,6 +152,6 @@ src/
 
 ## Créditos
 
-Modelo 3D: _[nombre del modelo]_ por _[autor]_ en Sketchfab — _[enlace]_, bajo licencia _[licencia]_.
+Modelo 3D: hecho por Amelia con [Meshy](https://www.meshy.ai).
 
 Chiikawa es un personaje de Nagano. Este es un proyecto de fans sin fines comerciales.
