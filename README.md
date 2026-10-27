@@ -13,6 +13,14 @@ camina por la pantalla y reacciona cuando la tocas.
 Las zonas transparentes de la ventana dejan pasar los clics al escritorio. El menú del icono de la barra
 de menús (bandeja en Windows) tiene **Mostrar/Ocultar**, **Siempre encima** y **Salir**.
 
+## Descargar
+
+**[⬇️ Descargar la última versión](https://github.com/amduho2005-cell/chiikawa-pet/releases/latest)**: macOS con
+Apple Silicon (M1, M2, M3…). Abre el `.dmg`, arrastra **Chiikawa Pet** a **Aplicaciones** y la primera vez
+haz clic derecho → **Abrir** → **Abrir** (la app no está firmada).
+
+Para compilarla tú misma, sigue los pasos de abajo.
+
 ## Requisitos
 
 - [Node.js](https://nodejs.org) 22 o superior
