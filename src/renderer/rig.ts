@@ -1,4 +1,39 @@
 import * as THREE from 'three'
+import { BONE_MAP } from '../shared/config'
+
+/** Partes del cuerpo que se pueden animar (las claves de BONE_MAP). */
+export type Part = keyof typeof BONE_MAP
+
+export interface RigBone {
+  bone: THREE.Bone
+  /** Rotación local del hueso en reposo; las animaciones se aplican como desplazamientos sobre ella. */
+  rest: THREE.Quaternion
+  /** Rotación del padre en reposo, relativa al personaje: permite expresar los ángulos en ejes del personaje. */
+  parentRest: THREE.Quaternion
+}
+
+export type Rig = Partial<Record<Part, RigBone>>
+
+/**
+ * Busca los huesos del BONE_MAP y guarda su pose de reposo.
+ * Si un hueso no existe se avisa en consola y esa parte simplemente no se anima.
+ */
+export function buildRig(pet: THREE.Object3D): Rig {
+  pet.updateMatrixWorld(true)
+  const petInv = pet.getWorldQuaternion(new THREE.Quaternion()).invert()
+  const rig: Rig = {}
+
+  for (const [part, name] of Object.entries(BONE_MAP) as [Part, string][]) {
+    const bone = pet.getObjectByName(name)
+    if (!(bone instanceof THREE.Bone) || !bone.parent) {
+      console.warn(`BONE_MAP: no existe el hueso "${name}" (${part}); esa parte no se animará`)
+      continue
+    }
+    const parentRest = petInv.clone().multiply(bone.parent.getWorldQuaternion(new THREE.Quaternion()))
+    rig[part] = { bone, rest: bone.quaternion.clone(), parentRest }
+  }
+  return rig
+}
 
 /**
  * Imprime en consola lo que trae el modelo para poder armar el BONE_MAP:

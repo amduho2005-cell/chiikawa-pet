@@ -2,6 +2,7 @@ import { app, BrowserWindow, screen } from 'electron'
 import { join } from 'node:path'
 import { WINDOW_SIZE, START_MARGIN, DEBUG } from '../shared/config'
 import { registerIpc } from './ipc'
+import { createTray } from './tray'
 
 function createWindow(): BrowserWindow {
   // Arranca en la esquina inferior derecha del área de trabajo (sin dock ni barra de menús)
@@ -48,7 +49,7 @@ app.whenReady().then(() => {
   // macOS no usa skipTaskbar: el equivalente es ocultar el icono del Dock
   app.dock?.hide()
   registerIpc()
-  createWindow()
+  createTray(createWindow())
 })
 
 app.on('window-all-closed', () => app.quit())

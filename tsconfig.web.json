@@ -11,5 +11,7 @@
     "skipLibCheck": true,
     "types": ["vite/client"]
   },
-  "include": ["src/renderer/**/*", "src/shared/**/*"]
+  "include": ["src/renderer/**/*", "src/shared/**/*"],
+  // Los tests corren con Node (npm test), no en el navegador
+  "exclude": ["src/**/*.test.ts"]
 }

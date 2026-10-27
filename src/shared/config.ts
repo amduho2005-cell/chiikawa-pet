@@ -37,5 +37,24 @@ export const BONE_MAP = {
   // Este modelo no tiene huesos de orejas ni ojos: earL, earR, eyes quedan sin mapear
 } as const satisfies Record<string, string>
 
+/**
+ * "Feeling" de las animaciones. Ángulos en radianes (0.1 rad ≈ 6°), tiempos en segundos,
+ * squash como fracción (0.03 = 3 % más alto).
+ */
+export const ANIM = {
+  /** Duración de la mezcla al cambiar de una animación a otra. */
+  blendTime: 0.25,
+  idle: {
+    breathPeriod: 3.2, // un ciclo de respiración
+    breathAmount: 0.03, // cuánto se estira al inhalar
+    swayPeriod: 4.6, // balanceo del cuerpo
+    bodySway: 0.025,
+    headPeriod: 5.3, // periodo distinto al del cuerpo para que no se vea mecánico
+    headSway: 0.07, // inclinación lateral de la cabeza
+    headNod: 0.03, // asiente un poquito al respirar
+    armBreath: 0.08 // los brazos se abren al inhalar
+  }
+}
+
 /** Modo debug: dibuja el esqueleto y abre DevTools (en `npm run dev`) para ver la consola. */
 export const DEBUG = true
