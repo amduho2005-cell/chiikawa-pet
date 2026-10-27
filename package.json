@@ -1,0 +1,25 @@
+{
+  "name": "chiikawa-pet",
+  "version": "0.1.0",
+  "description": "Desktop pet 3D de Chiikawa",
+  "main": "./out/main/index.js",
+  "private": true,
+  "scripts": {
+    "dev": "electron-vite dev",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
+    "build": "npm run typecheck && electron-vite build",
+    "package": "npm run build && electron-builder"
+  },
+  "dependencies": {
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/three": "^0.186.0",
+    "electron": "^45.0.0",
+    "electron-builder": "^26.18.0",
+    "electron-vite": "^6.0.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5"
+  }
+}

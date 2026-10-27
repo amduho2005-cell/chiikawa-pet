@@ -1,0 +1,14 @@
+{
+  // Proceso main (Node/Electron) y código compartido
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true,
+    "types": ["node"]
+  },
+  "include": ["electron.vite.config.ts", "src/main/**/*", "src/shared/**/*"]
+}

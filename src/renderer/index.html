@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- blob: hace falta porque GLTFLoader carga las texturas incrustadas en el .glb como blobs -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' data: blob:"
+    />
+    <title>Chiikawa Pet</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: transparent;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
