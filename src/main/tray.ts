@@ -22,8 +22,6 @@ export function createTray(win: BrowserWindow): void {
         // showInactive: aparece sin robarle el foco a la app que estés usando
         click: () => (win.isVisible() ? win.hide() : win.showInactive())
       },
-      // Se activa en el paso de SLEEP, cuando exista la máquina de estados que lo reciba
-      { label: 'Dormir', enabled: false },
       {
         label: 'Siempre encima',
         type: 'checkbox',

@@ -6,11 +6,39 @@ export interface MoveResult {
   hitY: -1 | 0 | 1
 }
 
+const NO_HIT: MoveResult = { hitX: 0, hitY: 0 }
 const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v))
 
 // setPosition solo acepta píxeles enteros: guardamos la posición con decimales aparte para que
 // pasos de ~1 px por frame (60 px/s a 60 fps) se acumulen bien y el movimiento sea parejo
 let exact: { x: number; y: number } | null = null
+
+/** Posición actual con decimales; si alguien más movió la ventana, parte de su posición real. */
+function currentPosition(win: BrowserWindow): { x: number; y: number } {
+  const [wx, wy] = win.getPosition()
+  if (!exact || Math.round(exact.x) !== wx || Math.round(exact.y) !== wy) exact = { x: wx, y: wy }
+  return exact
+}
+
+/**
+ * Lleva la ventana a (x, y) sin salirse del área de trabajo de la pantalla más cercana.
+ * (dx, dy) es la dirección del movimiento, para saber contra qué borde chocó.
+ */
+function placeWindow(win: BrowserWindow, x: number, y: number, dx: number, dy: number): MoveResult {
+  const [w, h] = win.getSize()
+  // workArea = pantalla sin Dock ni barra de menús (o barra de tareas en Windows)
+  const area = screen.getDisplayNearestPoint({ x: Math.round(x + w / 2), y: Math.round(y + h / 2) }).workArea
+  const maxX = area.x + area.width - w
+  const maxY = area.y + area.height - h
+  const cx = clamp(x, area.x, maxX)
+  const cy = clamp(y, area.y, maxY)
+  exact = { x: cx, y: cy }
+  win.setPosition(Math.round(cx), Math.round(cy))
+  return {
+    hitX: dx < 0 && cx <= area.x ? -1 : dx > 0 && cx >= maxX ? 1 : 0,
+    hitY: dy < 0 && cy <= area.y ? -1 : dy > 0 && cy >= maxY ? 1 : 0
+  }
+}
 
 /** Registra los canales IPC que usa el renderer (a través de window.pet en el preload). */
 export function registerIpc(): void {
@@ -21,30 +49,19 @@ export function registerIpc(): void {
     BrowserWindow.fromWebContents(event.sender)?.setIgnoreMouseEvents(ignore, { forward: true })
   })
 
-  // Mueve la ventana (dx, dy) píxeles sin salirse del área de trabajo de su pantalla
+  // Mueve la ventana (dx, dy) píxeles (caminar, caer)
   ipcMain.handle('move-by', (event, dx: unknown, dy: unknown): MoveResult => {
     const win = BrowserWindow.fromWebContents(event.sender)
-    if (!win || !Number.isFinite(dx) || !Number.isFinite(dy)) return { hitX: 0, hitY: 0 }
-    const ddx = dx as number
-    const ddy = dy as number
+    if (!win || !Number.isFinite(dx) || !Number.isFinite(dy)) return NO_HIT
+    const pos = currentPosition(win)
+    return placeWindow(win, pos.x + (dx as number), pos.y + (dy as number), dx as number, dy as number)
+  })
 
-    const [wx, wy] = win.getPosition()
-    const [w, h] = win.getSize()
-    // Si alguien más movió la ventana, partimos de su posición real
-    if (!exact || Math.round(exact.x) !== wx || Math.round(exact.y) !== wy) exact = { x: wx, y: wy }
-
-    // workArea = pantalla sin Dock ni barra de menús (o barra de tareas en Windows)
-    const area = screen.getDisplayNearestPoint({ x: wx + w / 2, y: wy + h / 2 }).workArea
-    const maxX = area.x + area.width - w
-    const maxY = area.y + area.height - h
-    const x = clamp(exact.x + ddx, area.x, maxX)
-    const y = clamp(exact.y + ddy, area.y, maxY)
-    exact = { x, y }
-    win.setPosition(Math.round(x), Math.round(y))
-
-    return {
-      hitX: ddx < 0 && x <= area.x ? -1 : ddx > 0 && x >= maxX ? 1 : 0,
-      hitY: ddy < 0 && y <= area.y ? -1 : ddy > 0 && y >= maxY ? 1 : 0
-    }
+  // Lleva la ventana a una posición de pantalla (arrastrar)
+  ipcMain.handle('move-to', (event, x: unknown, y: unknown): MoveResult => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    if (!win || !Number.isFinite(x) || !Number.isFinite(y)) return NO_HIT
+    const pos = currentPosition(win)
+    return placeWindow(win, x as number, y as number, (x as number) - pos.x, (y as number) - pos.y)
   })
 }

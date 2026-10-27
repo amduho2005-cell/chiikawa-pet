@@ -20,6 +20,7 @@ function createWindow(): BrowserWindow {
     skipTaskbar: true, // Windows/Linux: no aparece en la barra de tareas
     alwaysOnTop: true,
     show: false, // se muestra cuando el contenido está listo, para evitar un parpadeo blanco
+    acceptFirstMouse: true, // macOS: el primer clic ya llega a la página aunque la ventana no tenga el foco
     webPreferences: {
       // contextIsolation y sandbox vienen activados y nodeIntegration desactivado por defecto
       preload: join(__dirname, '../preload/index.js')

@@ -7,7 +7,9 @@ const api = {
   /** true = los clics atraviesan la ventana; false = la ventana los recibe. */
   setIgnoreMouse: (ignore: boolean) => ipcRenderer.send('set-ignore-mouse', ignore),
   /** Mueve la ventana (dx, dy) píxeles; responde si chocó con algún borde del área de trabajo. */
-  moveBy: (dx: number, dy: number): Promise<MoveResult> => ipcRenderer.invoke('move-by', dx, dy)
+  moveBy: (dx: number, dy: number): Promise<MoveResult> => ipcRenderer.invoke('move-by', dx, dy),
+  /** Lleva la ventana a (x, y) en coordenadas de pantalla, sin salirse del área de trabajo. */
+  moveTo: (x: number, y: number): Promise<MoveResult> => ipcRenderer.invoke('move-to', x, y)
 }
 
 contextBridge.exposeInMainWorld('pet', api)
