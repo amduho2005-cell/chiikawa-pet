@@ -6,3 +6,4 @@ release/
 *.log
 .env
 *.blend1
+*.exe

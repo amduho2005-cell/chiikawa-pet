@@ -15,9 +15,12 @@ de menús (bandeja en Windows) tiene **Mostrar/Ocultar**, **Siempre encima** y *
 
 ## Descargar
 
-**[⬇️ Descargar la última versión](https://github.com/amduho2005-cell/chiikawa-pet/releases/latest)**: macOS con
-Apple Silicon (M1, M2, M3…). Abre el `.dmg`, arrastra **Chiikawa Pet** a **Aplicaciones** y la primera vez
-haz clic derecho → **Abrir** → **Abrir** (la app no está firmada).
+Todos los instaladores están en **[Releases](https://github.com/amduho2005-cell/chiikawa-pet/releases/latest)**.
+
+| Sistema | Archivo | Cómo instalar |
+|---|---|---|
+| **Windows** (10 / 11, 64 bits) | [`Chiikawa_Pet_Setup_0_1_0.exe`](https://github.com/amduho2005-cell/chiikawa-pet/releases/latest/download/Chiikawa_Pet_Setup_0_1_0.exe) (~121 MB) | Abre el `.exe` y sigue el instalador. Si aparece SmartScreen: **Más información** → **Ejecutar de todas formas** (la app no está firmada). |
+| **macOS** con Apple Silicon (M1, M2, M3…) | `Chiikawa Pet-<versión>-arm64.dmg` | Abre el `.dmg`, arrastra **Chiikawa Pet** a **Aplicaciones** y la primera vez haz clic derecho → **Abrir** → **Abrir** (la app no está firmada). |
 
 Para compilarla tú misma, sigue los pasos de abajo.
 
@@ -27,7 +30,10 @@ Para compilarla tú misma, sigue los pasos de abajo.
 - [Git LFS](https://git-lfs.com), porque el modelo `.glb` se guarda con LFS:
 
   ```bash
+  # macOS
   brew install git-lfs
+  # Windows: ya viene incluido con Git for Windows
+
   git lfs install
   ```
 
